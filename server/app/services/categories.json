@@ -1,0 +1,54 @@
+[
+  {
+    "cat": "video",
+    "hosts": [
+      "youtube.com", "youtu.be", "vimeo.com", "twitch.tv", "netflix.com",
+      "tiktok.com", "dailymotion.com", "disneyplus.com", "hbomax.com", "videoland.nl"
+    ]
+  },
+  {
+    "cat": "tech",
+    "hosts": [
+      "github.com", "gitlab.com", "stackoverflow.com", "npmjs.com", "developer.mozilla.org",
+      "huggingface.co", "kaggle.com", "colab.research.google.com", "pypi.org", "crates.io",
+      "hub.docker.com", "docker.com", "dev.to", "vercel.com", "railway.com"
+    ]
+  },
+  {
+    "cat": "shopping",
+    "hosts": [
+      "amazon.", "ebay.", "aliexpress.", "etsy.com",
+      "bol.com", "coolblue.nl", "marktplaats.nl", "zalando.", "temu.com"
+    ]
+  },
+  {
+    "cat": "social",
+    "hosts": [
+      "reddit.com", "x.com", "twitter.com", "instagram.com", "linkedin.com", "facebook.com",
+      "news.ycombinator.com", "bsky.app", "mastodon.social", "threads.net", "discord.com",
+      "whatsapp.com", "t.me", "telegram.org"
+    ]
+  },
+  {
+    "cat": "music",
+    "hosts": [
+      "spotify.com", "soundcloud.com", "music.apple.com", "bandcamp.com",
+      "tidal.com", "deezer.com", "music.youtube.com"
+    ]
+  },
+  {
+    "cat": "docs",
+    "hosts": [
+      "docs.google.com", "notion.so", "drive.google.com", "dropbox.com",
+      "sheets.google.com", "slides.google.com", "figma.com", "miro.com", "confluence."
+    ]
+  },
+  {
+    "cat": "article",
+    "hosts": [
+      "arxiv.org", "medium.com", "substack.com", "wikipedia.org", "nos.nl",
+      "nu.nl", "theverge.com", "arstechnica.com", "nytimes.com", "bbc.com", "bbc.co.uk",
+      "reuters.com", "theguardian.com", "ft.com", "economist.com"
+    ]
+  }
+]

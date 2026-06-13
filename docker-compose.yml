@@ -1,0 +1,39 @@
+services:
+  api:
+    build: ./server
+    environment:
+      PONTJE_DB_PATH: /data/pontje.db
+      PONTJE_PUBLIC_BASE_URL: https://${PONTJE_DOMAIN}
+      PONTJE_GOOGLE_CLIENT_ID: ${PONTJE_GOOGLE_CLIENT_ID}
+      PONTJE_GOOGLE_CLIENT_SECRET: ${PONTJE_GOOGLE_CLIENT_SECRET}
+      PONTJE_ALLOWED_EMAILS: ${PONTJE_ALLOWED_EMAILS}
+      PONTJE_SESSION_SECRET: ${PONTJE_SESSION_SECRET}
+      PONTJE_SECRET_KEY: ${PONTJE_SECRET_KEY}
+      # Local-testing only (see README): never set to 1 on the real deployment.
+      PONTJE_DEV_FAKE_LOGIN: ${PONTJE_DEV_FAKE_LOGIN:-0}
+      # AI (optional; PONTJE_AI_DISABLED=1 hard-kills all AI features)
+      PONTJE_AI_DISABLED: ${PONTJE_AI_DISABLED:-0}
+      PONTJE_LLM_BASE_URL: ${PONTJE_LLM_BASE_URL:-}
+      PONTJE_LLM_MODEL: ${PONTJE_LLM_MODEL:-}
+      PONTJE_LLM_API_KEY: ${PONTJE_LLM_API_KEY:-}
+    volumes:
+      - pontje-data:/data
+    restart: unless-stopped
+
+  caddy:
+    build: ./web
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      PONTJE_DOMAIN: ${PONTJE_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: unless-stopped
+
+volumes:
+  pontje-data:
+  caddy-data:
+  caddy-config:

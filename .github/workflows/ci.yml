@@ -1,0 +1,54 @@
+name: CI
+
+# PLAN.md §23 #9: enforce server lint+tests, the web build, and — the part that
+# was previously only aspirational — that the committed TS API client matches
+# the server's current OpenAPI schema (gen:api drift guard).
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Sync deps (provisions Python 3.13 + dev group)
+        run: uv sync
+      - name: Lint
+        run: uv run ruff check
+      - name: Tests
+        run: uv run pytest -q
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      # gen:api shells out to the server (uv run … app.dump_openapi), so the
+      # web job needs uv too.
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install web deps
+        working-directory: web
+        run: npm ci
+      - name: Typecheck + build
+        working-directory: web
+        run: npm run build
+      - name: Regenerate the typed API client
+        working-directory: web
+        run: npm run gen:api
+      - name: Fail if the committed client is stale (gen:api drift)
+        working-directory: web
+        run: git diff --exit-code src/api/

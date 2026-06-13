@@ -1,0 +1,37 @@
+{
+	servers {
+		# DSM's reverse proxy is on a private address — trust its
+		# X-Forwarded-* so the API sees real client IPs (rate limiting).
+		trusted_proxies static private_ranges
+	}
+}
+
+:80 {
+	# Site-wide security headers (PLAN.md §23) — identical CSP to the FastAPI
+	# middleware. DSM terminates TLS in front, so the client still receives these
+	# over https (HSTS included).
+	header {
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data: https://icons.duckduckgo.com; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; font-src 'self'"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		X-Frame-Options DENY
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	}
+
+	# Share-target cold-start fallback (PLAN.md §16).
+	redir /share / 303
+
+	handle /api/* {
+		reverse_proxy api:8000
+	}
+
+	handle /ws {
+		reverse_proxy api:8000
+	}
+
+	handle {
+		root * /srv/www
+		try_files {path} /index.html
+		file_server
+	}
+}

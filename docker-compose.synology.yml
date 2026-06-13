@@ -1,0 +1,36 @@
+# Synology deployment: DSM's built-in reverse proxy terminates HTTPS with your
+# *.synology.me certificate and forwards (with WebSocket headers) to the Caddy
+# container below, which listens on plain HTTP :8080.
+# Full walkthrough: deploy/synology.md
+
+services:
+  api:
+    build: ./server
+    environment:
+      PONTJE_DB_PATH: /data/pontje.db
+      PONTJE_PUBLIC_BASE_URL: ${PONTJE_PUBLIC_BASE_URL} # e.g. https://pontje.you.synology.me
+      PONTJE_GOOGLE_CLIENT_ID: ${PONTJE_GOOGLE_CLIENT_ID}
+      PONTJE_GOOGLE_CLIENT_SECRET: ${PONTJE_GOOGLE_CLIENT_SECRET}
+      PONTJE_ALLOWED_EMAILS: ${PONTJE_ALLOWED_EMAILS}
+      PONTJE_SESSION_SECRET: ${PONTJE_SESSION_SECRET}
+      PONTJE_SECRET_KEY: ${PONTJE_SECRET_KEY}
+      # AI (optional; PONTJE_AI_DISABLED=1 hard-kills all AI features).
+      # Pair with an `ollama` container on the NAS — see README "AI features".
+      PONTJE_AI_DISABLED: ${PONTJE_AI_DISABLED:-0}
+      PONTJE_LLM_BASE_URL: ${PONTJE_LLM_BASE_URL:-}
+      PONTJE_LLM_MODEL: ${PONTJE_LLM_MODEL:-}
+      PONTJE_LLM_API_KEY: ${PONTJE_LLM_API_KEY:-}
+    volumes:
+      - pontje-data:/data
+    restart: unless-stopped
+
+  caddy:
+    build: ./web
+    ports:
+      - "8080:80" # HTTP only — DSM's reverse proxy sits in front
+    volumes:
+      - ./Caddyfile.synology:/etc/caddy/Caddyfile:ro
+    restart: unless-stopped
+
+volumes:
+  pontje-data:

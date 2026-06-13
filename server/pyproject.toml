@@ -1,0 +1,36 @@
+[project]
+name = "pontje-server"
+version = "0.1.0"
+description = "Pontje API — self-hosted P2P file, link & clipboard relay"
+license = "AGPL-3.0-or-later"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sqlmodel",
+    "authlib",
+    "itsdangerous",
+    "httpx",
+    "beautifulsoup4",
+    "cryptography",
+    "pydantic-settings",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["B008"]  # FastAPI Depends() in argument defaults is idiomatic

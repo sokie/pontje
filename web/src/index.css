@@ -1,0 +1,197 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Typographic identity (PLAN.md §17). Self-hosted variable fonts (@fontsource,
+   bundled — no external requests, works offline in the PWA): Hanken Grotesk is
+   the warm-but-precise UI voice; JetBrains Mono is the "machine voice" for
+   codes, sizes, network badges and secrets. */
+@theme {
+  --font-sans:
+    "Hanken Grotesk Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:
+    "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* "Pontje" = little ferry shuttling things across water. Dark-first deep-water
+   palette with a luminous ferry-light cyan accent; emerald is reserved strictly
+   for live presence/success so brand and "online" never blur together. */
+:root {
+  --radius: 0.65rem;
+  --background: oklch(0.99 0.004 220);
+  --foreground: oklch(0.2 0.024 245);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.024 245);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.024 245);
+  --primary: oklch(0.56 0.12 222);
+  --primary-foreground: oklch(0.99 0.005 220);
+  --secondary: oklch(0.965 0.008 225);
+  --secondary-foreground: oklch(0.24 0.022 245);
+  --muted: oklch(0.965 0.006 225);
+  --muted-foreground: oklch(0.5 0.022 240);
+  --accent: oklch(0.95 0.014 220);
+  --accent-foreground: oklch(0.24 0.022 245);
+  --destructive: oklch(0.58 0.22 27);
+  --border: oklch(0.9 0.012 230);
+  --input: oklch(0.9 0.012 230);
+  --ring: oklch(0.56 0.12 222);
+  --chart-1: oklch(0.56 0.12 222);
+  --chart-2: oklch(0.62 0.16 160);
+  --chart-3: oklch(0.58 0.13 255);
+  --chart-4: oklch(0.7 0.15 85);
+  --chart-5: oklch(0.62 0.2 25);
+  --sidebar: oklch(0.99 0.004 220);
+  --sidebar-foreground: oklch(0.2 0.024 245);
+  --sidebar-primary: oklch(0.56 0.12 222);
+  --sidebar-primary-foreground: oklch(0.99 0.005 220);
+  --sidebar-accent: oklch(0.95 0.014 220);
+  --sidebar-accent-foreground: oklch(0.24 0.022 245);
+  --sidebar-border: oklch(0.9 0.012 230);
+  --sidebar-ring: oklch(0.56 0.12 222);
+}
+
+.dark {
+  --background: oklch(0.155 0.012 240);
+  --foreground: oklch(0.965 0.006 230);
+  --card: oklch(0.205 0.014 242);
+  --card-foreground: oklch(0.965 0.006 230);
+  --popover: oklch(0.2 0.014 242);
+  --popover-foreground: oklch(0.965 0.006 230);
+  --primary: oklch(0.8 0.13 200);
+  --primary-foreground: oklch(0.17 0.03 235);
+  --secondary: oklch(0.27 0.014 242);
+  --secondary-foreground: oklch(0.965 0.006 230);
+  --muted: oklch(0.27 0.014 242);
+  --muted-foreground: oklch(0.715 0.022 235);
+  --accent: oklch(0.305 0.02 235);
+  --accent-foreground: oklch(0.965 0.006 230);
+  --destructive: oklch(0.7 0.19 22);
+  --border: oklch(0.9 0.03 215 / 10%);
+  --input: oklch(0.9 0.03 215 / 15%);
+  --ring: oklch(0.8 0.13 200);
+  --chart-1: oklch(0.8 0.13 200);
+  --chart-2: oklch(0.72 0.17 160);
+  --chart-3: oklch(0.7 0.13 250);
+  --chart-4: oklch(0.78 0.15 85);
+  --chart-5: oklch(0.7 0.18 20);
+  --sidebar: oklch(0.205 0.014 242);
+  --sidebar-foreground: oklch(0.965 0.006 230);
+  --sidebar-primary: oklch(0.8 0.13 200);
+  --sidebar-primary-foreground: oklch(0.17 0.03 235);
+  --sidebar-accent: oklch(0.305 0.02 235);
+  --sidebar-accent-foreground: oklch(0.965 0.006 230);
+  --sidebar-border: oklch(0.9 0.03 215 / 10%);
+  --sidebar-ring: oklch(0.8 0.13 200);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    /* Light over deep water: two faint cyan/blue washes at the top edge so the
+       backdrop has depth instead of reading as flat black. */
+    background-image:
+      radial-gradient(120% 60% at 50% -10%, oklch(0.8 0.13 200 / 0.06), transparent 55%),
+      radial-gradient(80% 50% at 100% 0%, oklch(0.7 0.13 255 / 0.05), transparent 50%);
+    background-repeat: no-repeat;
+  }
+
+  ::selection {
+    background: oklch(0.8 0.13 200 / 0.28);
+  }
+}
+
+/* ---- Motion & signature details (respecting prefers-reduced-motion) ------- */
+
+/* Live presence: a soft emerald ping radiating from an online dot. */
+.live-dot {
+  position: relative;
+}
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  animation: live-ping 2s cubic-bezier(0.2, 0, 0.3, 1) infinite;
+}
+@keyframes live-ping {
+  0% {
+    box-shadow: 0 0 0 0 oklch(0.72 0.17 160 / 0.5);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 5px oklch(0.72 0.17 160 / 0);
+  }
+}
+
+/* A sheen sweeping across an actively-transferring progress fill. */
+.progress-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.progress-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.35), transparent);
+  transform: translateX(-100%);
+  animation: sheen 1.5s ease-in-out infinite;
+}
+@keyframes sheen {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot::after,
+  .progress-sheen::after {
+    animation: none;
+  }
+}

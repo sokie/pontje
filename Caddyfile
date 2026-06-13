@@ -1,0 +1,32 @@
+{$PONTJE_DOMAIN} {
+	# Site-wide security headers (PLAN.md §23). CSP kept byte-identical to the
+	# FastAPI SecurityHeadersMiddleware so every deploy path emits one policy;
+	# Caddy's set-semantics replace the upstream API header rather than duplicate
+	# it. Covers the app's real sources (same-origin API/WS, DuckDuckGo favicons,
+	# React inline styles + self-hosted fonts).
+	header {
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data: https://icons.duckduckgo.com; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; font-src 'self'"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		X-Frame-Options DENY
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	}
+
+	# Share-target cold-start fallback: if the service worker isn't controlling
+	# the scope yet, the POST lands here — open the app instead of 404ing (PLAN.md §16).
+	redir /share / 303
+
+	handle /api/* {
+		reverse_proxy api:8000
+	}
+
+	handle /ws {
+		reverse_proxy api:8000
+	}
+
+	handle {
+		root * /srv/www
+		try_files {path} /index.html
+		file_server
+	}
+}

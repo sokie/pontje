@@ -1,0 +1,32 @@
+# Single-container build for PaaS deploys (Railway): FastAPI serves the built
+# SPA itself (app/spa.py) — no Caddy; the platform edge terminates TLS.
+# Full walkthrough: deploy/railway.md
+
+FROM node:24-alpine AS web
+WORKDIR /web
+COPY web/package.json web/package-lock.json ./
+RUN npm ci
+COPY web/ .
+RUN npm run build
+
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+WORKDIR /app
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+
+COPY server/pyproject.toml server/uv.lock ./
+RUN uv sync --frozen --no-dev
+COPY server/app ./app
+COPY --from=web /web/dist /srv/www
+ENV PONTJE_STATIC_DIR=/srv/www
+
+EXPOSE 8000
+# Shell form so Railway's injected $PORT is honored. Bind 0.0.0.0: Railway's
+# public edge reaches the container over IPv4, so an IPv6-only "::" bind returns
+# "Application failed to respond" (502). Single public service — there's no IPv6
+# private networking to preserve.
+# ONE worker — presence registry and rate limiter are in-process state.
+# NEVER add --workers, NEVER scale replicas above 1 (PLAN.md §18).
+CMD uv run --no-sync uvicorn app.main:app \
+    --host 0.0.0.0 --port "${PORT:-8000}" \
+    --proxy-headers --forwarded-allow-ips "*" \
+    --ws-ping-interval 20 --ws-ping-timeout 20
